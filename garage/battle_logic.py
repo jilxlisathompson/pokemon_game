@@ -1,12 +1,9 @@
 # This script houses the logic for the turn-based battle.
 
-
-
 #Define game variables
 
 player_health = 400 # Static for now
 cpu_health = 300 # Static for now
-is_player_turn = True # True: player's turn.  False: CPU's Turn
 
 #Pokemon object dict
 player_pokemon = {
@@ -61,6 +58,7 @@ def print_health_status():
     print(f"{cpu_pokemon['species']} HP: {cpu_pokemon['current_health']}/{cpu_pokemon['total_health']}\n")
 
 def battle(player_pokemon, cpu_pokemon):
+    is_player_turn = True  # True: player's turn.  False: CPU's Turn
     ## Main battle loop
     while is_active(player_pokemon) and is_active(cpu_pokemon):
         if is_player_turn:
@@ -76,3 +74,5 @@ def battle(player_pokemon, cpu_pokemon):
         print("You Win!")
     else:
         print("You Lose!")
+
+battle(player_pokemon, cpu_pokemon)
