@@ -60,18 +60,19 @@ def print_health_status():
     print(f"{player_pokemon['species']} HP: {player_pokemon['current_health']}/{player_pokemon['total_health']}")
     print(f"{cpu_pokemon['species']} HP: {cpu_pokemon['current_health']}/{cpu_pokemon['total_health']}\n")
 
-## Main battle loop
-while is_active(player_pokemon) and is_active(cpu_pokemon):
-    if is_player_turn:
-        perform_player_turn()
+def battle(player_pokemon, cpu_pokemon):
+    ## Main battle loop
+    while is_active(player_pokemon) and is_active(cpu_pokemon):
+        if is_player_turn:
+            perform_player_turn()
+        else:
+            attack(cpu_pokemon, player_pokemon)
+
+        print_health_status()
+        # Change turns
+        is_player_turn = not is_player_turn
+
+    if is_active(player_pokemon):
+        print("You Win!")
     else:
-        attack(cpu_pokemon, player_pokemon)
-
-    print_health_status()
-    # Change turns
-    is_player_turn = not is_player_turn
-
-if is_active(player_pokemon):
-    print("You Win!")
-else:
-    print("You Lose!")
+        print("You Lose!")
