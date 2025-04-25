@@ -1,5 +1,4 @@
 import requests
-import pprint
 
 # This script houses the logic for the turn-based battle.
 
@@ -23,8 +22,9 @@ def fetch_pokemon_data(pokemon_id) -> dict:
 def select_pokemon(pokemon_list = ('bulbasaur', 'charmander', 'squirtle')):
     player_selection = '-'
     while player_selection not in pokemon_list:
-        player_selection = input("Please enter a Pokemon from the list\n")
-        pprint.pp(pokemon_list)
+        print("Please enter a Pokemon from the list")
+        [print(i) for i in pokemon_list]
+        player_selection = input(">")
 
     chosen_pokemon = fetch_pokemon_data(player_selection)
 
@@ -34,7 +34,7 @@ def select_pokemon(pokemon_list = ('bulbasaur', 'charmander', 'squirtle')):
 def create_pokemon_dict(pokemon:dict) -> dict:
 
     pokemon_dict = {
-                "species": pokemon["name"],
+                "species": pokemon["name"].title(),
                 "total_health": pokemon["stats"][0]["base_stat"]*10,
                 "current_health": pokemon["stats"][0]["base_stat"]*10,
                 "move_power": 100,
@@ -43,15 +43,14 @@ def create_pokemon_dict(pokemon:dict) -> dict:
     return pokemon_dict
 
 
-player_selected_pokemon = select_pokemon()
+player_pokemon_data = select_pokemon()
+player_pokemon = create_pokemon_dict(player_pokemon_data)
+player_pokemon["is_enemy"] = False
 
-player_pokemon = {
-                "is_enemy": False,
-                "species": "Bulbasaur",
-                "total_health": player_health,
-                "current_health": player_health,
-                "move_power": 100,
-              }
+cpu_pokemon_data = fetch_pokemon_data("squirtle")
+cpu_pokemon = create_pokemon_dict(cpu_pokemon_data)
+cpu_pokemon["is_enemy"] = True
+
 
 #Pokemon object dict
 cpu_pokemon = {
@@ -86,8 +85,8 @@ def perform_player_turn():
     while True:
         # prompt player for decision
         print("What will " + player_pokemon["species"] + " do?")
-        action = input()
-        if action == "attack":
+        action = input("Options: Attack\n")
+        if action.strip().lower() == "attack":
             attack(player_pokemon, cpu_pokemon)
             break
         else:
