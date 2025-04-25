@@ -1,3 +1,6 @@
+import requests
+import pprint
+
 # This script houses the logic for the turn-based battle.
 
 #Define game variables
@@ -6,6 +9,42 @@ player_health = 400 # Static for now
 cpu_health = 300 # Static for now
 
 #Pokemon object dict
+
+#Tweaking this just so we have api calls in our running code
+
+def fetch_pokemon_data(pokemon_id) -> dict:
+    # This shouldn't be in the cli
+    """Makes an api request to fetch the data for a pokemon,
+     given either a numerical id or the pokemons name"""
+
+    pokemon_data = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}/')
+    return pokemon_data.json()
+
+def select_pokemon(pokemon_list = ('bulbasaur', 'charmander', 'squirtle')):
+    player_selection = '-'
+    while player_selection not in pokemon_list:
+        player_selection = input("Please enter a Pokemon from the list\n")
+        pprint.pp(pokemon_list)
+
+    chosen_pokemon = fetch_pokemon_data(player_selection)
+
+    return chosen_pokemon
+
+
+def create_pokemon_dict(pokemon:dict) -> dict:
+
+    pokemon_dict = {
+                "species": pokemon["name"],
+                "total_health": pokemon["stats"][0]["base_stat"]*10,
+                "current_health": pokemon["stats"][0]["base_stat"]*10,
+                "move_power": 100,
+              }
+
+    return pokemon_dict
+
+
+player_selected_pokemon = select_pokemon()
+
 player_pokemon = {
                 "is_enemy": False,
                 "species": "Bulbasaur",
@@ -22,6 +61,8 @@ cpu_pokemon = {
                 "current_health": cpu_health,
                 "move_power": 70,
               }
+
+
 def is_active(pokemon):
     if pokemon["current_health"] > 0:
         return True
